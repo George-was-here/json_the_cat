@@ -2,7 +2,21 @@ const request = require('request');
 
 const fetchBreedDescription = (breedName, callback) => {
   const url = `https://api.thecatapi.com/v1/breeds/search?q=${breedName}`;
-  request(url, callback);
+  request(url, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+    const data = JSON.parse(body);
+    if (data.length) {
+      callback(error, data[0].description);
+      return;
+    }
+    if (!error) {
+      callback(error, `You have not yet found what you are looking for... ${null} ${undefined}`);
+      return;
+    }
+  });
 };
 
 module.exports = { fetchBreedDescription };
